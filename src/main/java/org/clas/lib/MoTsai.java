@@ -514,14 +514,16 @@ public class MoTsai {
     
     public static void main(String[] args) {  
     	
-//        OptionStore parser = new OptionStore("ElastGen");
-    	
-    	MoTsai elib = new MoTsai();
-//    	if (args.length!=0) {
-    		
-//    	}
-//    	elib.tsai_table1(); 
-    	elib.rc(7.546,5,40,2);
+     	if (args.length!=0) {
+     	   	MoTsai elib = new MoTsai();        	
+    		if(args[0]=="demo") elib.tsai_table1();
+    		if(args[0]=="table") {
+    			elib.rc(Double.parseDouble(args[1]), 
+    					Double.parseDouble(args[2]),
+    					Double.parseDouble(args[3]),
+    					Double.parseDouble(args[4]));
+    		}
+    	}
     }
 
 }
