@@ -1,3 +1,4 @@
+package org.clas.lib;
 
 import java.text.DecimalFormat;
 import java.util.Formatter;
@@ -511,8 +512,14 @@ public class MoTsai {
     	for (int i=0; i<x.length; i++) System.out.println(x[i]+" "+spence(x[i])+" "+spence(-x[i]));
     }
     
-    public static void main(String[] args) {    	
+    public static void main(String[] args) {  
+    	
+//        OptionStore parser = new OptionStore("ElastGen");
+    	
     	MoTsai elib = new MoTsai();
+//    	if (args.length!=0) {
+    		
+//    	}
 //    	elib.tsai_table1(); 
     	elib.rc(7.546,5,40,2);
     }
