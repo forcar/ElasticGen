@@ -54,7 +54,9 @@ public class MoTsai {
         this.param = param;
     }
     
-    public double getBCC(double eb, double theta, double dtheta, int nsamples) { //bin centering correction
+  // theta bin widths should be ~0.1 deg to avoid excessive bin centering corrections. This may 
+  // conflict with theta resolution (~2 mrad?) which should generally be << bin width. 
+    public double getBCC(double eb, double theta, double dtheta, int nsamples) { 
         double xsect = elas(eb,theta);
         double xsum = 0;
         for (int i=0; i<nsamples; i++) xsum = xsum + elas(eb,theta + dtheta*(Math.random()-0.5));
