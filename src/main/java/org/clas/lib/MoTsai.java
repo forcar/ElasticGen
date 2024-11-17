@@ -230,9 +230,8 @@ public class MoTsai {
 
 //  	calls function elas defined above.
     
-    	double mp,wc,cst1,eel,epr,epcut,gamma4,beta4,e1,e3,e4,eta,qs,theta;
+    	double mp,wc,cst1,eel,epr,epcut,gamma4,beta4,e1,e3,e4,eta,theta;
     	double delta,delta_t1,delta_t2,delta_t3;
-    	double radcor1,sigunp;
     	double den,arg,arg11,arg15,arg19,arg23;
     	double[] deltac = new double[28];
     	double[] tmass = {1.007276470,12.00,180.94788};
@@ -332,20 +331,18 @@ public class MoTsai {
     	for (int idel=0; idel<deltac.length; idel++) del_mo = del_mo + deltac[idel];
     	del_mo  = -alpha*del_mo/pi;
 
-
     	delta_t1 = -0.5*bfunc(znuc)*t1*(Math.log(es/eta/eta/delta));
     	delta_t2 = -0.5*bfunc(znuc)*t2*(Math.log(eel/delta));
     	delta_t3 = -                t3*(Math.log(eel/delta));
+    	
     	delta_t  = delta_t1+delta_t2+delta_t3; // Straggling correction 
     
-    	radcor1  = 1. + del_mo+delta_t;
     	radcor   = Math.exp(del_mo + delta_t);
     	
-    	xsect_raw = elas(es,theta_d);    	
-    	sigunp = izn==1 && rc==0 ? xsect_raw : 1.0;
+    	xsect_raw = elas(es,theta_d);    	    	
     	xsect_rad = xsect_raw*radcor;
 
-    	return radcor*sigunp;
+    	return xsect_rad;
     }
 
     public double radtail(double es_4, double ep_4, double thetae_4, double csthk_4, double phik_4, double egam_4, double d3sig_4) {
@@ -451,18 +448,6 @@ public class MoTsai {
    	
     }
     
-    public void test1() {
-    	
-    	setFF(2);
-    	
-    	double eb = 7.546; 
-    	
-    	for (int i=1; i<30; i++) {
-    		double theta = (i-1)*1+6.5;
-    		System.out.println(theta+" "+1e3*elas(eb, theta)+" "+radcor(eb,theta,1,0.0058,0.0058,0.0,0.0617,2));
-    	}    	
-    }
-    
     public void tsai_table1() {
     	
         Formatter fmt = new Formatter();
@@ -485,9 +470,9 @@ public class MoTsai {
     public void rc(double ebeam, double thmin, double thmax, double bw, double wc) {
     	
         Formatter fmt = new Formatter();
-        DecimalFormat df = new DecimalFormat("#.###");
-        DecimalFormat dfx = new DecimalFormat("####.####");
-    	
+        DecimalFormat  df = new DecimalFormat("#.###");
+        DecimalFormat dfx = new DecimalFormat("0.000E0");
+           	
         String format = "%8s %5s %5s %5s %9s %9s %7s %7s %7s %7s\n";
     	
         setFF(2);
@@ -515,13 +500,15 @@ public class MoTsai {
         for (int i=0; i<x.length; i++) System.out.println(x[i]+" "+spence(x[i])+" "+spence(-x[i]));
     }
     
-    public static void main(String[] args) {  
-     	
+    public static void main(String[] args) { 
+    	
+    	MoTsai elib = new MoTsai();  
+    	
         if (args.length!=0) {
-            MoTsai elib = new MoTsai();  
+  
             if(args[0].equals("demo")) elib.tsai_table1();
             if(args[0].equals("table") && args.length==1) {
-            	elib.rc(7.645, 5, 30, 0.1, 1.05); return;
+            	elib.rc(7.546, 5, 30, 0.1, 1.05); return;
             }
             if(args[0].equals("table")) {
                 elib.rc(Double.parseDouble(args[1]), 
