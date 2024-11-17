@@ -448,7 +448,7 @@ public class MoTsai {
    	
     }
     
-    public void tsai_table1() {
+    public void demo() {
     	
         Formatter fmt = new Formatter();
         DecimalFormat df = new DecimalFormat("#.####");
@@ -467,7 +467,7 @@ public class MoTsai {
         System.out.println(fmt);
     }
     
-    public void rc(double ebeam, double thmin, double thmax, double bw, double wc) {
+    public void table(double ebeam, double thmin, double thmax, double bw, double wc) {
     	
         Formatter fmt = new Formatter();
         DecimalFormat  df = new DecimalFormat("#.###");
@@ -506,16 +506,16 @@ public class MoTsai {
     	
         if (args.length!=0) {
   
-            if(args[0].equals("demo")) elib.tsai_table1();
+            if(args[0].equals("demo")) elib.demo();
             if(args[0].equals("table") && args.length==1) {
-            	elib.rc(7.546, 5, 30, 0.1, 1.05); return;
+            	elib.table(7.546, 5, 30, 0.1, 1.05); return;
             }
             if(args[0].equals("table")) {
-                elib.rc(Double.parseDouble(args[1]), 
-                        Double.parseDouble(args[2]),
-                        Double.parseDouble(args[3]),
-                        Double.parseDouble(args[4]),
-                        Double.parseDouble(args[5]));
+                elib.table(Double.parseDouble(args[1]), 
+                           Double.parseDouble(args[2]),
+                           Double.parseDouble(args[3]),
+                           Double.parseDouble(args[4]),
+                           Double.parseDouble(args[5]));
             }
         }
         
