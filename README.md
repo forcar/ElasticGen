@@ -13,7 +13,7 @@ cd ElasticGen
 alias elas <path to ElasticGen>/bin/elas
 ```
 ## Usage
-Invoke [demo](https://github.com/forcar/ElasticGen/blob/4775773439641bcd4d87f13549be66366a58db73/src/main/java/org/clas/lib/MoTsai.java#L451) which reproduces Table I in [Mo-Tsai](https://github.com/forcar/elastgen/blob/master/pdf/RevModPhys.41.205.pdf) page 209 
+Invoke [demo](https://github.com/forcar/ElasticGen/blob/8c2ecbeadb4cd9a7fb3304a4d09f1e3660a5e7b7/src/main/java/org/clas/lib/MoTsai.java#L451) which reproduces Table I in [Mo-Tsai](https://github.com/forcar/elastgen/blob/master/pdf/RevModPhys.41.205.pdf) page 209 
 ```
 ls-imac.lan 52: elas demo
      Ebeam      Angle    Eelec      -q2         Z0         Z1         Z2
