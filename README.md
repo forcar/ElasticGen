@@ -55,6 +55,6 @@ The method [radcor](https://github.com/forcar/ElasticGen/blob/b17b74fa3a60b603e2
 <img width="1088" alt="MoTsai 1" src="https://github.com/user-attachments/assets/60f3293a-d647-41d7-a805-518f687e5994">
 
 
-The method [radtail](https://github.com/forcar/ElasticGen/blob/b17b74fa3a60b603e2b1ed5198c4e87b602c8096/src/main/java/org/clas/lib/MoTsai.java#L348) calculates internal bremmstrahlung (radiative tails) by evaluating the integrand of equation (B.4), which is sampled in the Fortran event generator [elastgen](https://github.com/forcar/elastgen) 
+The method [radtail](https://github.com/forcar/ElasticGen/blob/b17b74fa3a60b603e2b1ed5198c4e87b602c8096/src/main/java/org/clas/lib/MoTsai.java#L348) calculates internal bremmstrahlung (radiative tails) by evaluating the integrand of equation (B.4), which is sampled in the Fortran event generator [elastgen](https://github.com/forcar/elastgen) :
 
 <img width="1028" alt="Screenshot 2024-11-16 at 2 27 15 PM" src="https://github.com/user-attachments/assets/9c295729-eda5-4d17-a783-4860f5152054">
