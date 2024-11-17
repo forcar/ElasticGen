@@ -516,11 +516,11 @@ public class MoTsai {
     }
     
     public static void main(String[] args) {  
-    	     	
+     	
         if (args.length!=0) {
             MoTsai elib = new MoTsai();  
             if(args[0].equals("demo")) elib.tsai_table1();
-            if(args[0].equals("table")&&args.length==1) {
+            if(args[0].equals("table") && args.length==1) {
             	elib.rc(7.645, 5, 30, 0.1, 1.05); return;
             }
             if(args[0].equals("table")) {
@@ -531,6 +531,7 @@ public class MoTsai {
                         Double.parseDouble(args[5]));
             }
         }
+        
     }
 
 }
