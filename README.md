@@ -47,7 +47,7 @@ ls-imac.lan 104: elas table 7.546 5 30 2 1.05
 ```
 ## Notes
 
-This Java package is currently not setup as an event generator, but contains a single class [MoTsai.java](https://github.com/forcar/ElasticGen/blob/main/src/main/java/org/clas/lib/MoTsai.java) which includes calculations from the Mo-Tsai paper
+This Java package is not yet configured as an event generator, but contains a single class [MoTsai.java](https://github.com/forcar/ElasticGen/blob/main/src/main/java/org/clas/lib/MoTsai.java) which includes calculations from the Mo-Tsai paper
 [RMP, Vol. 41, 205 (1969)](https://github.com/forcar/elastgen/blob/master/pdf/RevModPhys.41.205.pdf).  The code can be used to calculate radiative corrections (including external straggling in the target).  
 
 The method [radcor](https://github.com/forcar/ElasticGen/blob/b17b74fa3a60b603e2b1ed5198c4e87b602c8096/src/main/java/org/clas/lib/MoTsai.java#L216) codes the radiative correction equations (II.6) and (II.9):
