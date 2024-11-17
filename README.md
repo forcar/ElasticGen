@@ -27,7 +27,7 @@ ls-imac.lan 52: elas demo
      2.201     38.601   1.4552   1.3996    -0.2257    -0.0161    -0.0083
      2.206     15.999   2.0219   0.3455    -0.2139    -0.0056    -0.0022
 ```
-Generate [table](https://github.com/forcar/ElasticGen/blob/4775773439641bcd4d87f13549be66366a58db73/src/main/java/org/clas/lib/MoTsai.java#L470) as follows: `elas table <Ebeam> <theta_min> <theta_max> <theta_bin_width> <wcut>`
+Generate [table](https://github.com/forcar/ElasticGen/blob/8c2ecbeadb4cd9a7fb3304a4d09f1e3660a5e7b7/src/main/java/org/clas/lib/MoTsai.java#L470) as follows: `elas table <Ebeam> <theta_min> <theta_max> <theta_bin_width> <wcut>`
 ```
 ls-imac.lan 104: elas table 7.546 5 30 2 1.05
    Ebeam Angle Eelec   -q2 xsraw(nb) xsrad(nb)  rc_int  rc_ext      rc     bcc
