@@ -45,7 +45,7 @@ ls-imac.lan 94: elas table 7.546 5 30 2 1.05 1
    7.546    27  4.021 6.615 1.878  9.721E-3  7.356E-3  -0.249   -0.03   0.757   0.985
    7.546    29  3.757  7.11 2.019  5.626E-3  4.253E-3   -0.25   -0.03   0.756   0.989
 ```
-Generate [ff](https://github.com/forcar/ElasticGen/blob/f6241b00b4625e0e54573b1bf45d143a71cc3771/src/main/java/org/clas/lib/MoTsai.java#L562) as follows: `elas ff <Ebeam> <theta_min> <theta_max> <theta_bin_width> <wcut>` 
+Generate [ff](https://github.com/forcar/ElasticGen/blob/f6241b00b4625e0e54573b1bf45d143a71cc3771/src/main/java/org/clas/lib/MoTsai.java#L562) comparison as follows: `elas ff <Ebeam> <theta_min> <theta_max> <theta_bin_width> <wcut>` 
 ```
 ls-imac.lan 96: elas ff 7.546 5 30 2 1.05 
    ebeam theta   -q2   tau dipole(nb) bosted(nb)  brash(nb)     ye(nb)  ratio1  ratio2  ratio3
