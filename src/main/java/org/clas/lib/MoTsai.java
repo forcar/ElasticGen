@@ -609,7 +609,7 @@ public class MoTsai {
   
             if(args[0].equals("demo")) elib.demo();
             if(args[0].equals("table") && args.length==1) {
-            	elib.table(7.546, 5, 30, 0.1, 1.05, 2); return;
+            	elib.table(7.546, 5, 30, 0.1, 1.05, 1); return;
             }
             if(args[0].equals("table")) {
                 elib.table(Double.parseDouble(args[1]), 
@@ -617,7 +617,7 @@ public class MoTsai {
                            Double.parseDouble(args[3]),
                            Double.parseDouble(args[4]),
                            Double.parseDouble(args[5]),
-                           Integer.parseInt(args[5]));
+                           Integer.parseInt(args[6]));
             }
             if(args[0].equals("ff") && args.length==1) {
             	elib.ff(7.546, 2, 30, 1, 1.05); return;
