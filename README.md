@@ -29,7 +29,7 @@ ls-imac.lan 52: elas demo
 ```
 Generate [table](https://github.com/forcar/ElasticGen/blob/8c2ecbeadb4cd9a7fb3304a4d09f1e3660a5e7b7/src/main/java/org/clas/lib/MoTsai.java#L470) as follows: `elas table <Ebeam> <theta_min> <theta_max> <theta_bin_width> <wcut> <ff>`
 ```
-ls-imac.lan 94: elas table 7.546 5 30 2 1.05 1
+ls-imac.lan 94: elas table 7.546 5 30 2 1.05 1 
    ebeam theta eprime   -q2   tau xsraw(nb) xsrad(nb)  rc_int  rc_ext      rc     bcc
    7.546     5  7.322  0.42 0.119   6.553E3   5.205E3  -0.198  -0.033   0.794   0.757
    7.546     7  7.119 0.801 0.227   6.832E2   5.371E2  -0.208  -0.032   0.786    0.83
