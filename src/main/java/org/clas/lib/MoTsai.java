@@ -10,45 +10,45 @@ public class MoTsai {
     double  pi = 3.141592654;
     double rmp = 0.93827;
     double rme = 0.00051099895069;
-    double fsc = 1./137.01;
+    double alpha = 1./137.01;
+    double hbarc = 389.37966;
+    double muP = 2.79285;
 	
     public double z0sum=0, z1sum=0, z2sum=0, del_mo, delta_t, xsect_raw, xsect_rad, radcor;
-    public double q2, e_prime;
+    public double q2, e_prime, tau;
+    double d3sig_4, egam_4;
     public int param;
  
     public MoTsai() {
 		
-    }
-
-    public double elas(double eb, double theta) {
-
-        double fsc2,theta2,s2,s22,c2,c22,s24,t2,t22,recoil,rmott,tau,eps,sig;
-
-        fsc2 = fsc*fsc; 
-        
-        theta2 = Math.toRadians(theta)/2.;
-        
-        s2 = Math.sin(theta2); s22=s2*s2; s24=s2*s2*s2*s2;
-        c2 = Math.cos(theta2); c22=c2*c2;
-        t2 = Math.tan(theta2); t22=t2*t2;
-        
-        recoil = 1.+(2.*eb/rmp)*s22;
-        e_prime = eb/recoil;
+    } 
+    
+    public double elas(double eb, double the) {
     	
-        q2 = 4.*eb*e_prime*s22;    
+        double alpha2,theta,snth2,csth2,e_pr,q2,sig_mott,f1,f2;
+
+        alpha2 = alpha*alpha; 
+
+        theta = Math.toRadians(the);
+        snth2 = (1.-Math.cos(theta))/2.;
+        csth2 = 1.-snth2;
+        
+        e_pr  = eb/(1.+2.*(eb/rmp)*snth2);
+        
+        q2    = 4.*eb*e_pr*snth2;
         getFF(q2,param);
 
-        rmott = 389*fsc2*c22/(4.*eb*eb*s24);   
-        rmott = rmott/recoil;
-    
-        tau = q2/(4.*rmp*rmp);
-        eps = 1/(1+2*(1+tau)*t22);
-    
-        sig = (tau*gmp*gmp+eps*gep*gep)/eps/(1+tau);
-     
-        return rmott*sig;
-    
-    }    
+        tau	  = q2/4./(rmp*rmp);
+              
+        sig_mott = alpha2/4./Math.pow(eb*snth2,2);
+        sig_mott = hbarc * sig_mott;
+        	      
+        f1 = (gep*gep+tau*gmp*gmp)*csth2/(1.+tau);
+        f2 = 2.*tau*gmp*gmp*snth2;
+        
+        return sig_mott*(e_pr/eb) * (f1+f2);
+
+    }
     
     public void setFF(int param) {
         this.param = param;
@@ -80,7 +80,7 @@ public class MoTsai {
         double epr=eb/(1+eb*(1-cx));
         double jac=epr*epr/pi;
         double th=Math.toDegrees(Math.acos(cx));    
-        return radcor(eb,th,0,t,0.,0.,wcut,0)*jac;
+        return radcor(eb,th,0,t,0.,0.,wcut)*jac;
     }
 
     
@@ -143,17 +143,21 @@ public class MoTsai {
             gep   = corr2/corr1;
             gmp   = 2.7928/corr1;
             break;
-        case 4:     
+    	case 4: //https://arxiv.org/abs/1707.09063
+    		gep = getGEP(q2);
+    		gmp = getGMP(q2);
+    		break;
+        case 5:     
             corr2 = 1 + 0.35*q1 + 2.44*q2 + 0.5*q2*q1 + 1.04*q2*q2 + 0.34*q2*q2*q1;
             gmp   = 2.7928/corr2;
             gep   = 0.0;
             break;
-        case 5: 
+        case 6: 
             gep = 1.041/Math.pow(1+q2/0.765,2) - 0.041/Math.pow(1+q2/6.2,2);
             gmp = 1.002/Math.pow(1+q2/0.749,2) - 0.002/Math.pow(1+q2/6.0,2);
             gmp = 2.7928*gmp;
             break;
-        case 6:
+        case 7:
             gep = 1.041/Math.pow(1+q2/0.765,2) - 0.041/Math.pow(1+q2/6.2,2);
             gmp = 1.002/Math.pow(1+q2/0.749,2) - 0.002/Math.pow(1+q2/6.0,2);
             double gepb = Math.exp(-0.5*Math.pow((q1-0.07)/0.27,2)) + Math.exp(-0.5*Math.pow((q1+0.07)/0.27,2));
@@ -168,6 +172,50 @@ public class MoTsai {
 
         return;
     }
+    
+    double getGMP(double q2){
+        double res;
+        double tcut = 4*0.13957*0.13957;
+        double t0 = -0.7;
+        double z = ( Math.sqrt(tcut+q2) - Math.sqrt(tcut-t0) ) / ( Math.sqrt(tcut+q2) + Math.sqrt(tcut-t0) ) ;
+        res = 0;
+        res += 0.264142994136;
+        res += -1.095306122120*z;
+        res += 1.218553781780  * Math.pow(z,2);
+        res += 0.661136493537  * Math.pow(z,3);
+        res += -1.405678925030 * Math.pow(z,4);
+        res += -1.356418438880 * Math.pow(z,5);
+        res += 1.447029155340  * Math.pow(z,6);
+        res += 4.235669735900  * Math.pow(z,7);
+        res += -5.334045653410 * Math.pow(z,8);
+        res += -2.916300520960 * Math.pow(z,9);
+        res += 8.707403067570  * Math.pow(z,10);
+        res += -5.706999943750 * Math.pow(z,11);
+        res += 1.280814375890  * Math.pow(z,12);
+        return muP*res;
+    }   
+    
+    double getGEP(double q2){
+    	 double res;
+    	 double tcut = 4*0.13957*0.13957;
+    	 double t0 = -0.7;
+    	 double z = ( Math.sqrt(tcut+q2) - Math.sqrt(tcut-t0) ) / ( Math.sqrt(tcut+q2) + Math.sqrt(tcut-t0) ) ;
+    	 res = 0;
+    	 res += 0.239163298067;
+    	 res += -1.109858574410 * z;
+    	 res += 1.444380813060  * Math.pow(z,2);
+    	 res += 0.479569465603  * Math.pow(z,3);
+    	 res += -2.286894741870 * Math.pow(z,4);
+    	 res += 1.126632984980  * Math.pow(z,5);
+    	 res += 1.250619843540  * Math.pow(z,6);
+    	 res += -3.631020471590 * Math.pow(z,7);
+    	 res += 4.082217023790  * Math.pow(z,8);
+    	 res += 0.504097346499  * Math.pow(z,9);
+    	 res += -5.085120460510 * Math.pow(z,10);
+    	 res += 3.967742543950  * Math.pow(z,11);
+    	 res += -0.981529071103 * Math.pow(z,12);
+    	 return res;
+   	}
     
     public double spence(double x) {
         double spence;
@@ -216,7 +264,7 @@ public class MoTsai {
         return (4./3.)*(1.+(z+1.)/(z+xi)/xi2/9.);
     }
     
-    public double radcor(double es, double theta_d, int izn, double t1, double t2, double t3, double wcut, int rc) {
+    public double radcor(double es, double theta_d, int izn, double t1, double t2, double t3, double wcut) {
     
 //  	Radiated elastic cross section from equation II.6 of Mo and Tsai, Rev. Mod. Phys. 41, 205-235 (1969).
 
@@ -227,21 +275,18 @@ public class MoTsai {
 //  	t2: outgoing e- path length (r.l.)
 //		t3: windows (b factor included)
 //  	wcut: used to calculate maximum radiated photon energy. wcut should be >  W resolution (GeV).
-
-//  	calls function elas defined above.
     
     	double mp,wc,cst1,eel,epr,epcut,gamma4,beta4,e1,e3,e4,eta,theta;
-    	double delta,delta_t1,delta_t2,delta_t3;
-    	double den,arg,arg11,arg15,arg19,arg23;
+    	double delta;
     	double[] deltac = new double[28];
     	double[] tmass = {1.007276470,12.00,180.94788};
-    	int znuc, znuc2; int[] znucc = {1,6,73};
-    	double me=0.000511, me2=me*me, alpha=7.299e-3, amu=0.931494061;
+    	int znuc; int[] znucc = {1,6,73};
+    	double me=0.000511, me2=me*me, amu=0.931494061;
         int[] iz0 = {0,1,3,24}, iz1 = {2,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23}, iz2 = {4,5,6,7,25,26,27};
         
     	theta = Math.toRadians(theta_d);
 
-    	znuc  = znucc[izn]; znuc2 = znuc*znuc;
+    	znuc  = znucc[izn]; 
     	mp    = tmass[izn]*amu;
     	wc    = mp+wcut; // wc should be equal to W cut used in elastic analysis
     
@@ -261,7 +306,49 @@ public class MoTsai {
     	e_prime = eel;
     	eta	   = es/eel;
     	q2	   = 2.*es*eel*cst1;
+    	
+    	deltac = del_mo(znuc,mp,q2,delta,eta,beta4,e1,e3,e4);
+
+    	z0sum=0; z1sum=0; z2sum=0;
+    	for (int i=0; i<iz0.length; i++) z0sum=z0sum+deltac[iz0[i]]; //terms independent of target charge Z
+    	for (int i=0; i<iz1.length; i++) z1sum=z1sum+deltac[iz1[i]]; //terms   dependent on target charge Z
+    	for (int i=0; i<iz2.length; i++) z2sum=z2sum+deltac[iz2[i]]; //terms dependent on Z^2 
+    	z0sum = -alpha*z0sum/pi; z1sum = -alpha*z1sum/pi; z2sum = -alpha*z2sum/pi;
+   	
+    	del_mo  = 0; 
+    	for (int idel=0; idel<deltac.length; idel++) del_mo = del_mo + deltac[idel];
+    	
+    	del_mo  = -alpha*del_mo/pi;
+    	delta_t = delta_t(znuc,es,eta,eel,delta,t1,t2,t3);
     
+    	radcor   = Math.exp(del_mo + delta_t);
+    	
+    	xsect_raw = elas(es,theta_d);    	    	
+    	xsect_rad = xsect_raw*radcor;
+
+    	return xsect_rad;
+    }
+    
+    public double delta_t(double znuc, double es, double eta, double eel, double delta, double t1, double t2, double t3) {
+    	
+    	// From equation II.9 of Mo and Tsai, Rev. Mod. Phys. 41, 205-235 (1969)
+    	
+    	double delta_t1 = -0.5*bfunc(znuc)*t1*(Math.log(es/eta/eta/delta)); //pre-radiation
+    	double delta_t2 = -0.5*bfunc(znuc)*t2*(Math.log(eel/delta));        //post-radiation
+    	double delta_t3 = -                t3*(Math.log(eel/delta));    	//target windows
+    	return delta_t1+delta_t2+delta_t3;                                  //total straggling correction 
+    	
+    }
+    
+    public double[] del_mo(double znuc, double mp, double q2, double delta, double eta,double beta4, double e1, double e3, double e4) {
+    	
+    	// From equation II.6 of Mo and Tsai, Rev. Mod. Phys. 41, 205-235 (1969)
+    	    	
+    	double den,arg,arg11,arg15,arg19,arg23;
+    	double[] deltac = new double[28];
+    	double znuc2 = znuc*znuc;
+    	double me2 = rme*rme;    	
+        	
     	deltac[0] = 28./9.-13./6.*Math.log(q2/me2);
     	arg=2*Math.log(e1/delta)-3*Math.log(eta);
     	deltac[1] = (Math.log(q2/me2) - 1.)*arg; 
@@ -319,33 +406,13 @@ public class MoTsai {
     	arg=(e4-mp)/(e4+mp);
     	arg=Math.sqrt(arg);
     	deltac[26]=-znuc2*spence( arg)/beta4;
-    	deltac[27]= znuc2*spence(-arg)/beta4;
-
-    	z0sum=0; z1sum=0; z2sum=0;
-    	for (int i=0; i<iz0.length; i++) z0sum=z0sum+deltac[iz0[i]];
-    	for (int i=0; i<iz1.length; i++) z1sum=z1sum+deltac[iz1[i]];
-    	for (int i=0; i<iz2.length; i++) z2sum=z2sum+deltac[iz2[i]];
-    	z0sum = -alpha*z0sum/pi; z1sum = -alpha*z1sum/pi; z2sum = -alpha*z2sum/pi;
-   	
-    	del_mo  = 0; 
-    	for (int idel=0; idel<deltac.length; idel++) del_mo = del_mo + deltac[idel];
-    	del_mo  = -alpha*del_mo/pi;
-
-    	delta_t1 = -0.5*bfunc(znuc)*t1*(Math.log(es/eta/eta/delta));
-    	delta_t2 = -0.5*bfunc(znuc)*t2*(Math.log(eel/delta));
-    	delta_t3 = -                t3*(Math.log(eel/delta));
+    	deltac[27]= znuc2*spence(-arg)/beta4;   
     	
-    	delta_t  = delta_t1+delta_t2+delta_t3; // Straggling correction 
-    
-    	radcor   = Math.exp(del_mo + delta_t);
-    	
-    	xsect_raw = elas(es,theta_d);    	    	
-    	xsect_rad = xsect_raw*radcor;
-
-    	return xsect_rad;
+    	return deltac;
+    	   	
     }
 
-    public double radtail(double es_4, double ep_4, double thetae_4, double csthk_4, double phik_4, double egam_4, double d3sig_4) {
+    public void radtail(double es_4, double ep_4, double thetae_4, double csthk_4, double phik_4) {
         	     
     // Calculates the exact one photon radiative cross section for elastic ep scattering. 
     // Value returned is integrand of equation B-4 in Mo and Tsai, Rev. Mod. Phys. 41, 205-235 (1969)
@@ -370,7 +437,7 @@ public class MoTsai {
         double qvec,q0,q2,sp,u2;
         double trm1,trm2,trm3,trm4,trm5,trm6,trm7,trm8,trm9,trm10;
         double trmf,trmg,Ge,Gm,tau,F0,G0,fac1,d3sig;
-        double alpha, me,me2,mp,mp2;
+        double me,me2,mp,mp2;
         double w2,w;
         double q2e;
         double phik,sdotk,pdotk;
@@ -384,8 +451,8 @@ public class MoTsai {
 
         me	= rme; me2=me*me;
         mp	= rmp; mp2=mp*mp;
-        alpha	= 1/137.01;
-        d3sig	= 0.;
+        
+        d3sig_4	= 0.;
 
         pvec = ep - 0.5*me2/ep;
         svec = es - 0.5*me2/es;
@@ -393,7 +460,7 @@ public class MoTsai {
         w2	 = mp2 + 2*mp*(es-ep) - q2e;
         w	 = Math.sqrt(w2);
         	      
-        if (w<mp) return 0.0;
+        if (w<mp) return;
 
         qvec = Math.sqrt(svec*svec + pvec*pvec - 2*svec*pvec*cthe);
         q0	 = es-ep;
@@ -440,11 +507,8 @@ public class MoTsai {
         fac1	= Math.pow(alpha,3)/Math.pow(2.*pi,2)*(ep/es)*egam/mp/2./(q2*q2);
         fac1	= fac1/(q0 + mp - qvec*csthk);
 
-        d3sig	= fac1*(mp2*F0*trmf + G0*trmg);
-        d3sig_4 = d3sig*389.37966; // convert to ub
+        d3sig_4	= hbarc*fac1*(mp2*F0*trmf + G0*trmg);
         egam_4  = egam;
-
-        return d3sig_4;
    	
     }
     
@@ -460,31 +524,31 @@ public class MoTsai {
     	
         fmt.format("%10s %10s %8s %8s %10s %10s %10s\n","Ebeam","Angle","Eelec","-q2","Z0","Z1","Z2");
         for (int i=0; i<eb.length; i++) {
-            radcor(eb[i],angle[i],0,0.0058,0.0058,0.0,0,1); //wcut=0.1117 for W=1.05 GeV, wcut=0 for Mo&Tsai Table 1   		
+            radcor(eb[i],angle[i],0,0.0058,0.0058,0.0,0); //wcut=0.1117 for W=1.05 GeV, wcut=0 for Mo&Tsai Table 1   		
             fmt.format("%10s %10s %8s %8s %10s %10s %10s\n",
             eb[i],angle[i],df.format(e_prime),df.format(q2),df.format(z0sum),df.format(z1sum),df.format(z2sum));
     	}
         System.out.println(fmt);
     }
     
-    public void table(double ebeam, double thmin, double thmax, double bw, double wc) {
+    public void table(double ebeam, double thmin, double thmax, double bw, double wc, int ff) {
     	
         Formatter fmt = new Formatter();
         DecimalFormat  df = new DecimalFormat("#.###");
         DecimalFormat dfx = new DecimalFormat("0.000E0");
            	
-        String format = "%8s %5s %5s %5s %9s %9s %7s %7s %7s %7s\n";
+        String format = "%8s %5s %5s %5s %5 %9s %9s %7s %7s %7s %7s\n";
     	
-        setFF(2);
+        setFF(ff);
 
-        fmt.format(format,"Ebeam","Angle","Eelec","-q2","xsraw(nb)","xsrad(nb)","rc_int","rc_ext","rc","bcc");
+        fmt.format(format,"Ebeam","Angle","Eelec","-q2","tau","xsraw(nb)","xsrad(nb)","rc_int","rc_ext","rc","bcc");
 
         for (double theta=thmin/bw; theta<thmax/bw; theta++) {
             double the=theta*bw;
-            radcor(ebeam,the,0,0.0058,0.0058,0.0,wc-rmp,1);
+            radcor(ebeam,the,0,0.0058,0.0058,0.0,wc-rmp);
             fmt.format(format,
             ebeam,df.format(the),df.format(e_prime),
-                  df.format(q2),
+                  df.format(q2),df.format(tau),
                  dfx.format(xsect_raw*1e3),
                  dfx.format(xsect_rad*1e3),
                   df.format(del_mo),
@@ -495,6 +559,43 @@ public class MoTsai {
         System.out.println(fmt);
     }
     
+    public void ff(double ebeam, double thmin, double thmax, double bw, double wc) {
+    	
+        Formatter fmt = new Formatter();
+        DecimalFormat  df = new DecimalFormat("#.###");
+        DecimalFormat dfx = new DecimalFormat("0.000E0");
+        DecimalFormat dfr = new DecimalFormat("#.##");
+        
+        String format = "%8s %5s %5s %5s %10s %10s %10s %10s %7s %7s %7s\n";
+    	
+        fmt.format(format,"ebeam","theta","-q2","tau","dipole(nb)","bosted(nb)","brash(nb)","ye(nb)","ratio1","ratio2","ratio3"); 	
+        
+        for (double theta=thmin/bw; theta<thmax/bw; theta++) {
+            double the=theta*bw;
+            setFF(1); radcor(ebeam,the,0,0.0058,0.0058,0.0,wc-rmp); //dipole
+            double xs1 = xsect_raw;
+            setFF(2); radcor(ebeam,the,0,0.0058,0.0058,0.0,wc-rmp); //bosted
+            double xs2 = xsect_raw;
+            setFF(3); radcor(ebeam,the,0,0.0058,0.0058,0.0,wc-rmp); //brash
+            double xs3 = xsect_raw;
+            setFF(4); radcor(ebeam,the,0,0.0058,0.0058,0.0,wc-rmp); //ye (from FX)
+            double xs4 = xsect_raw;
+
+            fmt.format(format,
+            ebeam,df.format(the),
+                  df.format(q2),df.format(tau),
+                 dfx.format(xs1*1e3),
+                 dfx.format(xs2*1e3),
+                 dfx.format(xs3*1e3),
+                 dfx.format(xs4*1e3),
+                 dfr.format(xs1/xs2),
+                 dfr.format(xs1/xs3),
+                 dfr.format(xs1/xs4));
+        }
+        System.out.println(fmt);
+
+    }
+    
     public void test3() {
         double[] x = {0.1,0.2,0.3,0.8,1.0,2.0,3.0,10,20,30,40};
         for (int i=0; i<x.length; i++) System.out.println(x[i]+" "+spence(x[i])+" "+spence(-x[i]));
@@ -502,20 +603,22 @@ public class MoTsai {
     
     public static void main(String[] args) { 
     	
-    	MoTsai elib = new MoTsai();  
+    	MoTsai elib = new MoTsai(); 
+        elib.ff(7.546, 2, 30, 1, 1.05);
     	
         if (args.length!=0) {
   
             if(args[0].equals("demo")) elib.demo();
             if(args[0].equals("table") && args.length==1) {
-            	elib.table(7.546, 5, 30, 0.1, 1.05); return;
+            	elib.table(7.546, 5, 30, 0.1, 1.05, 2); return;
             }
             if(args[0].equals("table")) {
                 elib.table(Double.parseDouble(args[1]), 
                            Double.parseDouble(args[2]),
                            Double.parseDouble(args[3]),
                            Double.parseDouble(args[4]),
-                           Double.parseDouble(args[5]));
+                           Double.parseDouble(args[5]),
+                           Integer.parseInt(args[5]));
             }
         }
         
