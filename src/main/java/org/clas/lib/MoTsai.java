@@ -537,11 +537,11 @@ public class MoTsai {
         DecimalFormat  df = new DecimalFormat("#.###");
         DecimalFormat dfx = new DecimalFormat("0.000E0");
            	
-        String format = "%8s %5s %5s %5s %5 %9s %9s %7s %7s %7s %7s\n";
+        String format = "%8s %5s %6s %5s %5s %9s %9s %7s %7s %7s %7s\n";
     	
         setFF(ff);
 
-        fmt.format(format,"Ebeam","Angle","Eelec","-q2","tau","xsraw(nb)","xsrad(nb)","rc_int","rc_ext","rc","bcc");
+        fmt.format(format,"ebeam","theta","eprime","-q2","tau","xsraw(nb)","xsrad(nb)","rc_int","rc_ext","rc","bcc");
 
         for (double theta=thmin/bw; theta<thmax/bw; theta++) {
             double the=theta*bw;
@@ -604,7 +604,6 @@ public class MoTsai {
     public static void main(String[] args) { 
     	
     	MoTsai elib = new MoTsai(); 
-        elib.ff(7.546, 2, 30, 1, 1.05);
     	
         if (args.length!=0) {
   
@@ -620,6 +619,17 @@ public class MoTsai {
                            Double.parseDouble(args[5]),
                            Integer.parseInt(args[5]));
             }
+            if(args[0].equals("ff") && args.length==1) {
+            	elib.ff(7.546, 2, 30, 1, 1.05); return;
+            }
+            if(args[0].equals("ff")) {
+                elib.ff(Double.parseDouble(args[1]), 
+                        Double.parseDouble(args[2]),
+                        Double.parseDouble(args[3]),
+                        Double.parseDouble(args[4]),
+                        Double.parseDouble(args[5]));            	
+            }
+            
         }
         
     }
