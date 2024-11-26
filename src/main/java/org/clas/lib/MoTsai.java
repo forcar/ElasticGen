@@ -568,7 +568,7 @@ public class MoTsai {
         
         String format = "%8s %5s %5s %5s %10s %10s %10s %10s %7s %7s %7s\n";
     	
-        fmt.format(format,"ebeam","theta","-q2","tau","dipole(nb)","bosted(nb)","brash(nb)","ye(nb)","ratio1","ratio2","ratio3"); 	
+        fmt.format(format,"ebeam","theta","-q2","tau","dipole(nb)","bosted(nb)","brash(nb)","ye(nb)","ratio2","ratio3","ratio4"); 	
         
         for (double theta=thmin/bw; theta<thmax/bw; theta++) {
             double the=theta*bw;
@@ -605,9 +605,12 @@ public class MoTsai {
     	
     	MoTsai elib = new MoTsai(); 
     	
+    	elib.ff(7.546, 2, 30, 1, 1.05);
+    	
         if (args.length!=0) {
   
             if(args[0].equals("demo")) elib.demo();
+            
             if(args[0].equals("table") && args.length==1) {
             	elib.table(7.546, 5, 30, 0.1, 1.05, 1); return;
             }
@@ -619,6 +622,7 @@ public class MoTsai {
                            Double.parseDouble(args[5]),
                            Integer.parseInt(args[6]));
             }
+            
             if(args[0].equals("ff") && args.length==1) {
             	elib.ff(7.546, 2, 30, 1, 1.05); return;
             }
@@ -628,10 +632,8 @@ public class MoTsai {
                         Double.parseDouble(args[3]),
                         Double.parseDouble(args[4]),
                         Double.parseDouble(args[5]));            	
-            }
-            
+            }            
         }
-        
     }
 
 }
