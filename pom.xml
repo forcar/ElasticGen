@@ -3,4 +3,20 @@
   <groupId>ElasticGen</groupId>
   <artifactId>ElasticGen</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+  <dependencies>
+     <dependency>  
+        <groupId>org.jlab.groot</groupId>
+        <artifactId>groot</artifactId>
+        <version>3.0.1-SNAPSHOT</version>
+         <type>jar</type>
+     </dependency>
+     <dependency>  
+        <groupId>org.jlab.coat</groupId>
+        <artifactId>coat-libs</artifactId>
+        <version>10.0.2-SNAPSHOT</version>
+         <type>jar</type>
+     </dependency>
+  </dependencies>
+  
 </project>
