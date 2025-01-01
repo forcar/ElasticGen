@@ -52,11 +52,18 @@ public class Elasgen {
     double hydrogen_rad = 865.;
     double[] del_radcor = new double[1000];
     
-    public Elasgen(String file) {
-    	readFile(file);
-		init();
-		elast_gen();
+    public Elasgen() {
+
     } 
+    
+    public void getFile(String file) {
+    	readFile(file);
+		init();    	
+    }
+    
+    public void run() {
+		elast_gen();    	
+    }
     
     public void readFile(String file) {
     	assignInputParameters(parseInput(getInput(file)));
@@ -633,8 +640,7 @@ public class Elasgen {
             cstk1 = (ps-pp*cst0)/den;
             cstk2 = (ps*cst0-pp)/den;
         
-            cstk = Math.random()<0.5 ? cstk1:cstk2;
-    
+            cstk = Math.random()<0.5 ? cstk1:cstk2;    
             phik = 0.;
     
 //      The following calculation of the photon energy is approximate
@@ -853,7 +859,9 @@ public class Elasgen {
     	    
     public static void main(String[] args) { 
     	
-    	Elasgen gen = new Elasgen("/Users/colesmith/clas12/ElasticGen/inp/elas_clas12.inp");
+    	Elasgen gen = new Elasgen();
+    	gen.getFile("/Users/colesmith/clas12/ElasticGen/inp/elas_clas12.inp");
+    	gen.run();
 
     }
 }
